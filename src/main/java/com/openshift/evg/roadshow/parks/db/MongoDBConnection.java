@@ -43,28 +43,13 @@ public class MongoDBConnection {
 
     @PostConstruct
     public void initConnection() {
-        String mongoHost = env.getProperty("mongodb.server.host", "127.0.0.1"); // env var MONGODB_SERVER_HOST takes precedence
-        String mongoPort = env.getProperty("mongodb.server.port", "27017"); // env var MONGODB_SERVER_PORT takes precedence
-        String mongoUri = env.getProperty("uri", "");
-        String mongoUser = env.getProperty("mongodb.user", "mongodb"); // env var MONGODB_USER takes precedence
-        String mongoPassword = env.getProperty("mongodb.password", "mongodb"); // env var MONGODB_PASSWORD takes precedence
-        String mongoDBName = env.getProperty("mongodb.database", "mongodb"); // env var MONGODB_DATABASE takes precedence
+        String mongoHost = env.getProperty("MONGODB_NATIONALPARKS_SERVICE_HOST", "127.0.0.1"); // env var MONGODB_SERVER_HOST takes precedence
+        String mongoPort = env.getProperty("MONGODB_NATIONALPARKS_SERVICE_PORT", "27017"); // env var MONGODB_SERVER_PORT takes precedence
+        String mongoUser = env.getProperty("database-user", "mongodb"); // env var MONGODB_USER takes precedence
+        String mongoPassword = env.getProperty("database-password", "mongodb"); // env var MONGODB_PASSWORD takes precedence
+        String mongoDBName = env.getProperty("database-name", "mongodb"); // env var MONGODB_DATABASE takes precedence
 
         try {
-        	// If mongoUri is set, we use this, else, we use mongoHost and mongoPort
-        	// This will come in this form (mongodb://127.0.0.1:27017)
-        	if (mongoUri!=null && ! "".equals(mongoUri)){
-        		Pattern pattern = Pattern.compile("mongodb?://([^:^/]*):?(\\d*)?");
-        		Matcher matcher = pattern.matcher(mongoUri);
-        		if (matcher.find()){
-        			mongoHost = matcher.group(1);
-        			mongoPort = matcher.group(2);
-        			// We assume all information comes in the binding format
-        	        mongoUser = env.getProperty("username", "mongodb");
-        	        mongoPassword = env.getProperty("password", "mongodb");
-        	        mongoDBName = env.getProperty("database_name", "mongodb");       			
-        		}
-        	}
         	
             String mongoURI = "mongodb://" + mongoUser + ":" + mongoPassword + "@" + mongoHost + ":" + mongoPort + "/" + mongoDBName;
             System.out.println("[INFO] Connection string: " + mongoURI);
